@@ -1,7 +1,7 @@
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
-const API_BASE = "https://joseph-trials-shelf-oh.trycloudflare.com/api";
+const API_BASE = "https://websites-checking-confirmed-pipes.trycloudflare.com/api";
 
 const api = axios.create({
     baseURL: API_BASE,

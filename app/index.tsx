@@ -1,67 +1,33 @@
-import React, { useState } from "react";
-import { View, Text, TextInput, Button, ActivityIndicator, StyleSheet } from "react-native";
-import { login } from "../services/authService";
+import React from "react";
+import { View, Text, ActivityIndicator, FlatList } from "react-native";
 import { useFetch } from "../services/useFetch";
-import { getMember } from "../services/memberServices";
+import { getAttendance } from "../services/attendanceServices";
 
 export default function Index() {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [loggedIn, setLoggedIn] = useState(false);
+    const { data: attendance, loading, error } = useFetch(getAttendance, []);
 
-    // only fetch members if logged in
-    const { data: members, loading, error } = useFetch(
-        () => (loggedIn ? getMember() : Promise.resolve([])),
-        [loggedIn]
-    );
-
-    const handleLogin = async () => {
-        try {
-            await login(email, password);
-            setLoggedIn(true);
-        } catch (err) {
-            console.error("Login failed", err);
-        }
-    };
-
-    if (!loggedIn) {
-        return (
-            <View style={styles.container}>
-                <Text style={styles.title}>Login</Text>
-                <TextInput
-                    style={styles.input}
-                    placeholder="Email"
-                    value={email}
-                    onChangeText={setEmail}
-                    autoCapitalize="none"
-                />
-                <TextInput
-                    style={styles.input}
-                    placeholder="Password"
-                    value={password}
-                    onChangeText={setPassword}
-                    secureTextEntry
-                />
-                <Button title="Login" onPress={handleLogin} />
-            </View>
-        );
-    }
-
-    if (loading) return <ActivityIndicator style={styles.container} />;
-    if (error) return <Text style={styles.container}>Error: {error}</Text>;
+    if (loading) return <ActivityIndicator className="flex-1 justify-center items-center" />;
+    if (error) return <Text className="flex-1 text-red-500">{error}</Text>;
 
     return (
-        <View style={styles.container}>
-            <Text style={styles.title}>Members</Text>
-            {members?.map((m: any) => (
-                <Text key={m._id}>{m.name}</Text>
-            ))}
+        <View className="flex-1 bg-gray-100 p-4">
+            <Text className="text-2xl font-bold mb-4">Attendance</Text>
+
+            <FlatList
+                data={attendance?.result || []}
+                keyExtractor={(item) => item.memberId}
+                renderItem={({ item }) => (
+                    <View className="bg-white rounded-xl p-4 mb-3 shadow">
+                        <Text className="text-lg font-semibold">{item.name}</Text>
+                        <Text className="text-gray-600">
+                            ✅ Present Days: {Object.values(item).filter((d) => d === 1).length}
+                        </Text>
+                        <Text className="text-gray-600">
+                            ❌ Absent Days: {Object.values(item).filter((d) => d === 0).length}
+                        </Text>
+                    </View>
+                )}
+            />
         </View>
     );
 }
-
-const styles = StyleSheet.create({
-    container: { flex: 1, justifyContent: "center", alignItems: "center", padding: 16 },
-    input: { borderWidth: 1, padding: 8, width: "80%", marginVertical: 8, borderRadius: 4 },
-    title: { fontSize: 24, marginBottom: 16 },
-});
