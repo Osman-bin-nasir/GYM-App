@@ -1,33 +1,34 @@
-import React from "react";
-import { View, Text, ActivityIndicator, FlatList } from "react-native";
-import { useFetch } from "../services/useFetch";
-import { getAttendance } from "../services/attendanceServices";
+// app/index.tsx
+import { useEffect } from "react";
+import { useRouter, useRootNavigationState } from "expo-router";
+import { useAuth } from "../context/AuthContext";
+import { ActivityIndicator, View, InteractionManager } from "react-native";
 
 export default function Index() {
-    const { data: attendance, loading, error } = useFetch(getAttendance, []);
+    const { user, loading } = useAuth();
+    const router = useRouter();
+    const rootNavigationState = useRootNavigationState();
 
-    if (loading) return <ActivityIndicator className="flex-1 justify-center items-center" />;
-    if (error) return <Text className="flex-1 text-red-500">{error}</Text>;
+    useEffect(() => {
+        if (loading || !rootNavigationState?.key) return;
+
+        const task = InteractionManager.runAfterInteractions(() => {
+            if (user) {
+                // Redirect to home screen instead of root
+                router.replace("/home");
+            } else {
+                router.replace("/login");
+            }
+        });
+
+        return () => {
+            task.cancel?.();
+        };
+    }, [user, loading, rootNavigationState, router]);
 
     return (
-        <View className="flex-1 bg-gray-100 p-4">
-            <Text className="text-2xl font-bold mb-4">Attendance</Text>
-
-            <FlatList
-                data={attendance?.result || []}
-                keyExtractor={(item) => item.memberId}
-                renderItem={({ item }) => (
-                    <View className="bg-white rounded-xl p-4 mb-3 shadow">
-                        <Text className="text-lg font-semibold">{item.name}</Text>
-                        <Text className="text-gray-600">
-                            ✅ Present Days: {Object.values(item).filter((d) => d === 1).length}
-                        </Text>
-                        <Text className="text-gray-600">
-                            ❌ Absent Days: {Object.values(item).filter((d) => d === 0).length}
-                        </Text>
-                    </View>
-                )}
-            />
+        <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+            <ActivityIndicator size="large" />
         </View>
     );
 }

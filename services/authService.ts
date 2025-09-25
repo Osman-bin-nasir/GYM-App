@@ -1,24 +1,69 @@
-import api from "@/services/api";
-import * as SecureStore from "expo-secure-store";
+// services/authService.ts
+import api from './api';
+import * as SecureStore from 'expo-secure-store';
 
 export const login = async (email: string, password: string) => {
-    const res = await api.post("/auth/login", {email, password});
+    try {
+        console.log("Login attempt with email:", email);
 
-    if(res.data?.token) {
-        await SecureStore.setItemAsync("authToken", res.data.token)
+        // Try different possible endpoints - adjust based on your backend
+        const endpoints = [
+            '/auth/login',
+            '/api/auth/login',
+            '/admin/login',
+            '/login'
+        ];
+
+        let response;
+        let lastError;
+
+        for (const endpoint of endpoints) {
+            try {
+                console.log("Trying endpoint:", endpoint);
+                response = await api.post(endpoint, {
+                    email: email.trim().toLowerCase(),
+                    password
+                });
+                console.log("Success with endpoint:", endpoint);
+                break;
+            } catch (error: any) {
+                lastError = error;
+                console.log("Failed with endpoint:", endpoint, error.response?.status);
+                continue;
+            }
+        }
+
+        if (!response) {
+            throw lastError || new Error("All endpoints failed");
+        }
+
+        console.log("Login response data:", response.data);
+
+        const { token, admin, user } = response.data;
+        const userData = admin || user || response.data;
+
+        if (!token) {
+            throw new Error("No token received from server");
+        }
+
+        // Store the token securely
+        await SecureStore.setItemAsync('authToken', token);
+
+        return {
+            token,
+            ...userData,
+            email: userData.email || email
+        };
+    } catch (error: any) {
+        console.error("Auth service error details:", {
+            status: error.response?.status,
+            data: error.response?.data,
+            message: error.message
+        });
+        throw error;
     }
-    return res.data;
-}
+};
 
-export const signup = async (email: string, password: string) => {
-    const res = await api.post("/auth/signup", {email, password});
-
-    if(res.data?.token) {
-        await SecureStore.setItemAsync("authToken", res.data.token)
-    }
-    return res.data;
-}
-
-export const logout = async (token: string) => {
-    await SecureStore.deleteItemAsync("authToken");
-}
+export const logout = async () => {
+    await SecureStore.deleteItemAsync('authToken');
+};

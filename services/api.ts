@@ -1,22 +1,44 @@
+// services/api.ts
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
-const API_BASE = "https://websites-checking-confirmed-pipes.trycloudflare.com/api";
+// Use your actual backend URL - replace with your correct URL
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://192.168.0.177:3000/api"; // Use your computer's IP
+
+console.log("API URL configured as:", API_URL);
 
 const api = axios.create({
-    baseURL: API_BASE,
+    baseURL: API_URL,
     headers: {
         "Content-Type": "application/json",
     },
+    timeout: 10000,
 });
 
-// 🔑 keeps the user logged in even when they close and reopen app
 api.interceptors.request.use(async (config) => {
     const token = await SecureStore.getItemAsync("authToken");
     if (token) {
         config.headers.Authorization = `Bearer ${token}`;
     }
+
+    console.log("Making API request to:", config.url);
     return config;
 });
+
+api.interceptors.response.use(
+    (response) => {
+        console.log("API response success:", response.status);
+        return response;
+    },
+    (error) => {
+        console.error("API Error details:", {
+            url: error.config?.url,
+            status: error.response?.status,
+            data: error.response?.data,
+            message: error.message
+        });
+        return Promise.reject(error);
+    }
+);
 
 export default api;

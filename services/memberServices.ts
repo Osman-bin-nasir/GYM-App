@@ -1,5 +1,7 @@
-import api from "@/services/api";
+// services/memberServices.ts
+import api from './api';
 
-export const getMember = async (token: string) => {
-    const res = await api.get("/members");
-}
+export const getMembers = async () => {
+    const response = await api.get('/members');
+    return response.data;
+};
