@@ -76,11 +76,28 @@ export default function HomeAdmin() {
                     </TouchableOpacity>
 
                     <TouchableOpacity
-                        className="bg-green-100 p-4 rounded-lg flex-row items-center"
+                        className="bg-green-100 p-4 rounded-lg flex-row items-center mb-3"
                         onPress={() => router.push("/members")}
                     >
                         <Text className="text-green-500 font-bold mr-3">👥</Text>
                         <Text className="font-semibold text-gray-800">Manage Members</Text>
+                    </TouchableOpacity>
+
+                    {/* QR Code Actions */}
+                    <TouchableOpacity
+                        className="bg-purple-100 p-4 rounded-lg flex-row items-center mb-3"
+                        onPress={() => router.push("/qr-generator")}
+                    >
+                        <Text className="text-purple-500 font-bold mr-3">📱</Text>
+                        <Text className="font-semibold text-gray-800">Generate QR Code</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        className="bg-orange-100 p-4 rounded-lg flex-row items-center"
+                        onPress={() => router.push("/scan-member-qr")}
+                    >
+                        <Text className="text-orange-500 font-bold mr-3">🔍</Text>
+                        <Text className="font-semibold text-gray-800">Scan Member QR</Text>
                     </TouchableOpacity>
                 </View>
 

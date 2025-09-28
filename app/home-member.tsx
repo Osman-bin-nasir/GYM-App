@@ -27,7 +27,7 @@ export default function HomeMember() {
             const res = await api.get("/member/attendance/today");
             setAttendance(res.data);
         } catch (err: any) {
-            Alert.alert("Error", err.response?.data?.message || err.message);
+            console.log("No attendance record for today");
         } finally {
             setLoading(false);
         }
@@ -49,14 +49,14 @@ export default function HomeMember() {
                     <Text className="text-gray-600 mt-1">{profile?.email}</Text>
                 </View>
 
-                {/* Membership Info */}
-                <View className="bg-purple-500 rounded-xl p-4 mb-4 shadow-sm">
-                    <Text className="text-white text-lg font-semibold">Plan</Text>
-                    <Text className="text-white text-2xl font-bold mt-1">{profile?.plan || "N/A"}</Text>
-                    {profile?.expiryDate && (
-                        <Text className="text-white mt-1">Expires: {new Date(profile.expiryDate).toLocaleDateString()}</Text>
-                    )}
-                </View>
+                {/*/!* Membership Info *!/*/}
+                {/*<View className="bg-purple-500 rounded-xl p-4 mb-4 shadow-sm">*/}
+                {/*    <Text className="text-white text-lg font-semibold">Plan</Text>*/}
+                {/*    <Text className="text-white text-2xl font-bold mt-1">{profile?.plan || "N/A"}</Text>*/}
+                {/*    {profile?.expiryDate && (*/}
+                {/*        <Text className="text-white mt-1">Expires: {new Date(profile.expiryDate).toLocaleDateString()}</Text>*/}
+                {/*    )}*/}
+                {/*</View>*/}
 
                 {/* Attendance */}
                 <View className="bg-white rounded-xl p-6 shadow-sm mb-4">
@@ -71,17 +71,28 @@ export default function HomeMember() {
                             )}
                         </View>
                     ) : (
-                        <Text className="text-gray-500">No record found</Text>
+                        <Text className="text-gray-500">No record found for today</Text>
                     )}
                 </View>
 
-                {/* Quick Action: View History */}
-                <TouchableOpacity
-                    className="bg-blue-500 p-4 rounded-xl shadow-sm mb-6"
-                    onPress={() => router.push("/member-attendance-history")}
-                >
-                    <Text className="text-white font-bold text-center">View Attendance History</Text>
-                </TouchableOpacity>
+                {/* QR Code Actions */}
+                <View className="bg-white rounded-xl p-6 shadow-sm mb-4">
+                    <Text className="text-xl font-bold text-gray-800 mb-4">Quick Actions</Text>
+
+                    <TouchableOpacity
+                        className="bg-blue-500 p-4 rounded-xl shadow-sm mb-4"
+                        onPress={() => router.push("/scan-gym-qr")}
+                    >
+                        <Text className="text-white font-bold text-center text-lg">Scan Gym QR Code</Text>
+                    </TouchableOpacity>
+
+                    <TouchableOpacity
+                        className="bg-green-500 p-4 rounded-xl shadow-sm"
+                        onPress={() => router.push("/my-qr-code")}
+                    >
+                        <Text className="text-white font-bold text-center text-lg">My QR Code</Text>
+                    </TouchableOpacity>
+                </View>
 
                 {/* Logout */}
                 <TouchableOpacity
