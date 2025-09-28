@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { View, TextInput, TouchableOpacity, Text, Alert } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
-import api from "../../services/api";
+import { verifyOtp as verifyOtpService } from "../../services/authService";
 import { useAuth } from "../../context/AuthContext";
 
 export default function VerifyOtp() {
@@ -13,13 +13,9 @@ export default function VerifyOtp() {
 
     const handleVerify = async () => {
         try {
-            const res = await api.post("/member-auth/verify-otp", {
-                email,
-                gymIdentifier: gym,
-                otp,
-            });
+            const res = await verifyOtpService(email, gym, otp);
 
-            const { token, memberId } = res.data;
+            const { token } = res;
             setTempToken(token); // Store token in AuthContext
 
             router.push("/member-login/set-password"); // Navigate without params

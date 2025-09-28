@@ -67,3 +67,27 @@ export const login = async (email: string, password: string) => {
 export const logout = async () => {
     await SecureStore.deleteItemAsync('authToken');
 };
+
+export const setPassword = async (password: string, tempToken: string) => {
+    const response = await api.post('/member-auth/set-password', { password }, {
+        headers: { Authorization: `Bearer ${tempToken}` },
+    });
+    return response.data;
+};
+
+export const requestOtp = async (email: string, gymIdentifier: string) => {
+    const response = await api.post('/member-auth/request-otp', { email, gymIdentifier });
+    return response.data;
+};
+
+export const verifyOtp = async (email: string, gymIdentifier: string, otp: string) => {
+    const response = await api.post('/member-auth/verify-otp', { email, gymIdentifier, otp });
+    return response.data;
+};
+
+export const memberLogin = async (email: string, password: string) => {
+    const response = await api.post('/member-auth/login', { email, password });
+    const { token } = response.data;
+    await SecureStore.setItemAsync('authToken', token);
+    return response.data;
+};

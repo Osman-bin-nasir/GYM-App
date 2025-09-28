@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from "react";
 import { View, Text, FlatList, TouchableOpacity, Alert } from "react-native";
 import { useRouter } from "expo-router";
-import { getMembers } from "../services/memberServices";
+import { getMembers } from "../../services/memberServices";
 
 export default function Members() {
     const [members, setMembers] = useState<any[]>([]);

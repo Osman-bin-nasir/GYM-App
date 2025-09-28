@@ -2,9 +2,9 @@
 import React from 'react';
 import { Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useAuth } from '../context/AuthContext';
-import { scanGymQR } from '../services/qrService';
-import QRScanner from '../components/QRScanner';
+import { useAuth } from '../../context/AuthContext';
+import { scanGymQR } from '../../services/qrService';
+import QRScanner from '../../components/QRScanner';
 
 export default function ScanGymQR() {
     const router = useRouter();

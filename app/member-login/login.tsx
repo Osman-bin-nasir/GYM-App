@@ -35,7 +35,7 @@ export default function MemberLogin() {
                 plan: member.plan,
                 expiryDate: member.expiryDate,
             });
-            router.replace("../home-member");
+            router.replace("/(member)/home");
         } catch (err: any) {
             Alert.alert("Login failed", err.response?.data?.message || err.message);
         } finally {

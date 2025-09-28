@@ -1,9 +1,9 @@
 // app/home-member.tsx
 import { View, Text, ScrollView, TouchableOpacity, ActivityIndicator, Alert } from "react-native";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import api from "../services/api";
+import api from "../../services/api";
 
 type AttendanceToday = {
     status: "Present" | "Absent" | "Not Marked";
@@ -88,7 +88,7 @@ export default function HomeMember() {
 
                     <TouchableOpacity
                         className="bg-green-500 p-4 rounded-xl shadow-sm"
-                        onPress={() => router.push("/my-qr-code")}
+                        onPress={() => router.push("/(member)/my-qr-code")}
                     >
                         <Text className="text-white font-bold text-center text-lg">My QR Code</Text>
                     </TouchableOpacity>

@@ -2,41 +2,39 @@
 import React, { useState } from "react";
 import { View, TextInput, TouchableOpacity, Text, Alert } from "react-native";
 import { useRouter } from "expo-router";
-import api from "../../services/api";
+import { setPassword as setPasswordService } from "../../services/authService";
 import { useAuth } from "../../context/AuthContext";
 
 export default function SetPassword() {
     const [password, setPassword] = useState("");
     const router = useRouter();
-    const { tempToken, clearTempToken } = useAuth(); // Retrieve tempToken from AuthContext
+    const { tempToken, clearTempToken } = useAuth(); // Get the temporary token
 
     const handleSet = async () => {
         try {
             if (!tempToken) {
-                Alert.alert("Error", "Missing token. Please restart login flow.");
+                Alert.alert("Error", "No session token. Please restart the process.");
                 return;
             }
 
-            await api.post(
-                "/member-auth/set-password",
-                { password },
-                { headers: { Authorization: `Bearer ${tempToken}` } }
-            );
+            // Use the dedicated service, passing the temporary token
+            const res = await setPasswordService(password, tempToken);
 
-            Alert.alert("Success", "Password set. Please login.");
-            clearTempToken(); // Clear tempToken after success
+            Alert.alert("Success", res.msg || "Password set successfully. Please login.");
+            clearTempToken(); // Clear the temporary token after use
             router.replace("/member-login/login");
         } catch (err: any) {
-            Alert.alert("Error", err.response?.data?.msg || err.message);
+            console.error("Set password error:", err.response?.data || err.message);
+            Alert.alert("Error", err.response?.data?.msg || "Something went wrong");
         }
     };
 
     return (
         <View className="flex-1 justify-center p-4 bg-gray-100">
-            <Text className="text-2xl font-bold mb-6 text-center">Set Password</Text>
+            <Text className="text-2xl font-bold mb-6 text-center">Set New Password</Text>
             <TextInput
                 className="h-12 border border-gray-400 rounded px-3 mb-4 bg-white text-lg"
-                placeholder="New Password"
+                placeholder="Enter New Password"
                 placeholderTextColor="gray"
                 value={password}
                 onChangeText={setPassword}

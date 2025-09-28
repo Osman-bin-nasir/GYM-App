@@ -2,8 +2,8 @@
 import React from 'react';
 import { Alert } from 'react-native';
 import { useRouter } from 'expo-router';
-import { scanMemberQR } from '../services/qrService';
-import QRScanner from '../components/QRScanner';
+import { scanMemberQR } from '../../services/qrService';
+import QRScanner from '../../components/QRScanner';
 
 export default function ScanMemberQR() {
     const router = useRouter();

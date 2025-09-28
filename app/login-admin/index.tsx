@@ -1,9 +1,9 @@
 // app/login-admin.tsx
 import React, { useState } from "react";
 import { View, Text, TextInput, TouchableOpacity, Alert, ActivityIndicator } from "react-native";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "expo-router";
-import api from "../services/api";
+import api from "../../services/api";
 
 export default function AdminLogin() {
     const [email, setEmail] = useState("");
@@ -23,7 +23,7 @@ export default function AdminLogin() {
             const res = await api.post("/auth/login", { email, password });
             const { token, admin } = res.data;
             await signIn(token, "admin", { id: admin.id, name: admin.name, email: admin.email });
-            router.replace("/home-admin");
+            router.replace("..//(admin)/home");
         } catch (err: any) {
             Alert.alert("Login failed", err.response?.data?.message || err.message);
         } finally {

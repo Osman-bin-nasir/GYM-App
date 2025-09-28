@@ -2,8 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TouchableOpacity, Alert, ScrollView } from 'react-native';
 import QRCode from 'react-native-qrcode-svg';
-import { useAuth } from '../context/AuthContext';
-import { generateQRCode } from '../services/qrService';
+import { useAuth } from '../../context/AuthContext';
+import { generateQRCode } from '../../services/qrService';
 
 export default function QRGenerator() {
     const [qrData, setQrData] = useState<string>('');

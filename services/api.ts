@@ -16,9 +16,12 @@ const api = axios.create({
 });
 
 api.interceptors.request.use(async (config) => {
-    const token = await SecureStore.getItemAsync("authToken");
-    if (token) {
-        config.headers.Authorization = `Bearer ${token}`;
+    // Only set the token if one is not already present
+    if (!config.headers.Authorization) {
+        const token = await SecureStore.getItemAsync("authToken");
+        if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
+        }
     }
 
     console.log("Making API request to:", config.url);

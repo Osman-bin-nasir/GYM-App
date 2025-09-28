@@ -1,6 +1,6 @@
 // app/home-admin.tsx
 import { View, Text, ScrollView, TouchableOpacity } from "react-native";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../../context/AuthContext";
 import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 
@@ -86,7 +86,7 @@ export default function HomeAdmin() {
                     {/* QR Code Actions */}
                     <TouchableOpacity
                         className="bg-purple-100 p-4 rounded-lg flex-row items-center mb-3"
-                        onPress={() => router.push("/qr-generator")}
+                        onPress={() => router.push("/(admin)/qr-generator")}
                     >
                         <Text className="text-purple-500 font-bold mr-3">📱</Text>
                         <Text className="font-semibold text-gray-800">Generate QR Code</Text>
@@ -94,7 +94,7 @@ export default function HomeAdmin() {
 
                     <TouchableOpacity
                         className="bg-orange-100 p-4 rounded-lg flex-row items-center"
-                        onPress={() => router.push("/scan-member-qr")}
+                        onPress={() => router.push("/(admin)/scan-member-qr")}
                     >
                         <Text className="text-orange-500 font-bold mr-3">🔍</Text>
                         <Text className="font-semibold text-gray-800">Scan Member QR</Text>
