@@ -41,6 +41,12 @@ export default function Members() {
                             <Text className="text-lg font-bold">{item.name}</Text>
                             <Text className="text-sm text-gray-600">{item.email}</Text>
                             <Text className="text-sm text-gray-600">{item.phone}</Text>
+                            <TouchableOpacity
+                                className="mt-3 p-2 bg-green-500 rounded-lg items-center"
+                                onPress={() => router.push(`/(admin)/attendance?memberId=${item._id}`)}
+                            >
+                                <Text className="text-white font-bold">View Attendance</Text>
+                            </TouchableOpacity>
                         </View>
                     )}
                     ListEmptyComponent={
