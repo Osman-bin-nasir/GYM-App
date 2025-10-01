@@ -7,7 +7,7 @@ export default function ChooseRole() {
     const router = useRouter();
 
     return (
-        <SafeAreaView className="flex-1 bg-gradient-to-br from-blue-50 to-indigo-100">
+        <SafeAreaView className="flex-1 bg-gradient-to-br from-blue-50 to-indigo-100 bg-white">
             {/* Header Section */}
             <View className="flex-1 justify-center items-center px-6">
                 <View className="mb-10">
