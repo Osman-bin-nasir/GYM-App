@@ -4,7 +4,7 @@ import { FontAwesome } from '@expo/vector-icons';
 
 export default function MemberLayout() {
   return (
-    <Tabs>
+    <Tabs screenOptions={{ headerShown: false }}>
       <Tabs.Screen
         name="home"
         options={{

@@ -9,6 +9,7 @@ import {Ionicons} from "@expo/vector-icons";
 export default function AdminLogin() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [loading, setLoading] = useState(false);
     const { signIn } = useAuth();
     const router = useRouter();
@@ -53,14 +54,19 @@ export default function AdminLogin() {
                         onChangeText={setEmail}
                         autoCapitalize="none"
                     />
-                    <TextInput
-                        className="h-12 border border-gray-300 rounded-lg px-4 mb-4 bg-white"
-                        placeholder="Password"
-                        placeholderTextColor="gray"
-                        secureTextEntry
-                        value={password}
-                        onChangeText={setPassword}
-                    />
+                    <View className="flex-row items-center border border-gray-300 rounded-lg px-4 mb-4 bg-white">
+                        <TextInput
+                            className="h-12 flex-1"
+                            placeholder="Password"
+                            placeholderTextColor="gray"
+                            secureTextEntry={!showPassword}
+                            value={password}
+                            onChangeText={setPassword}
+                        />
+                        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                            <Ionicons name={showPassword ? "eye-off" : "eye"} size={24} color="gray" />
+                        </TouchableOpacity>
+                    </View>
                     <TouchableOpacity
                         className="bg-blue-500 py-3 rounded-lg mt-2"
                         onPress={handleLogin}

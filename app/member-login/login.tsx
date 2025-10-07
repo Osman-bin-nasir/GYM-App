@@ -8,25 +8,37 @@ import { Ionicons } from "@expo/vector-icons";
 export default function MemberLogin() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
     const [gym, setGym] = useState("");
     const [loading, setLoading] = useState(false);
     const { signIn } = useAuth();
     const router = useRouter();
-
     const handleLogin = async () => {
         if (!email || !password || !gym) {
             Alert.alert("Error", "All fields are required");
             return;
         }
 
+        console.log("🔹 Starting login request...");
+        console.log("📧 Email:", email);
+        console.log("🏋️‍♂️ Gym Identifier:", gym);
+
         setLoading(true);
         try {
+            console.log("➡️ Sending POST request to /member-auth/login...");
             const res = await api.post("/member-auth/login", {
                 email,
                 password,
                 gymIdentifier: gym,
             });
+
+            console.log("✅ Response received from API:", res.status);
+            console.log("📦 Response data:", res.data);
+
             const { token, member } = res.data;
+            console.log("🪪 Token:", token);
+            console.log("👤 Member:", member);
+
             await signIn(token, "member", {
                 id: member.id,
                 name: member.name,
@@ -35,13 +47,24 @@ export default function MemberLogin() {
                 plan: member.plan,
                 expiryDate: member.expiryDate,
             });
+
+            console.log("🎉 Login successful — redirecting to /home");
             router.replace("/(member)/home");
+
         } catch (err: any) {
-            Alert.alert("Login failed", err.response?.data?.message || err.message);
+            console.error("❌ Login failed:", err);
+            console.error("🧾 Error details:", err.response?.data || err.message);
+
+            Alert.alert(
+                "Login failed",
+                err.response?.data?.msg || err.message || "Something went wrong"
+            );
         } finally {
+            console.log("🔚 Login process finished");
             setLoading(false);
         }
     };
+
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -64,14 +87,19 @@ export default function MemberLogin() {
                         onChangeText={setEmail}
                         autoCapitalize="none"
                     />
-                    <TextInput
-                        className="h-12 border border-gray-300 rounded-lg px-4 mb-4 bg-white"
-                        placeholder="Password"
-                        placeholderTextColor="gray"
-                        value={password}
-                        onChangeText={setPassword}
-                        secureTextEntry
-                    />
+                    <View className="flex-row items-center border border-gray-300 rounded-lg px-4 mb-4 bg-white">
+                        <TextInput
+                            className="h-12 flex-1"
+                            placeholder="Password"
+                            placeholderTextColor="gray"
+                            secureTextEntry={!showPassword}
+                            value={password}
+                            onChangeText={setPassword}
+                        />
+                        <TouchableOpacity onPress={() => setShowPassword(!showPassword)}>
+                            <Ionicons name={showPassword ? "eye-off" : "eye"} size={24} color="gray" />
+                        </TouchableOpacity>
+                    </View>
                     <TextInput
                         className="h-12 border border-gray-300 rounded-lg px-4 mb-4 bg-white"
                         placeholder="Gym Identifier"

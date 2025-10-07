@@ -5,6 +5,7 @@ import { useRouter } from 'expo-router';
 import { useAuth } from '../../context/AuthContext';
 import { scanGymQR } from '../../services/qrService';
 import QRScanner from '../../components/QRScanner';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function ScanGymQR() {
     const router = useRouter();
@@ -21,10 +22,12 @@ export default function ScanGymQR() {
     };
 
     return (
-        <QRScanner
-            onScan={handleScan}
-            scanType="gym"
-            title="Scan Gym QR Code for Attendance"
-        />
+        <SafeAreaView className="flex-1 bg-black">
+            <QRScanner
+                onScan={handleScan}
+                scanType="gym"
+                title="Scan Gym QR Code for Attendance"
+            />
+        </SafeAreaView>
     );
 }
