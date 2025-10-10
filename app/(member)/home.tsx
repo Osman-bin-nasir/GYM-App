@@ -10,7 +10,7 @@ import Animated, { FadeIn } from 'react-native-reanimated'; // For animations
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 export default function Dashboard() {
-    const { profile, logout, token } = useAuth();
+    const { profile, token } = useAuth(); // Removed logout here since it's moved to Profile
     const router = useRouter();
     const [attendance, setAttendance] = useState<any[]>([]);
     const [markedDates, setMarkedDates] = useState({});
@@ -74,11 +74,6 @@ export default function Dashboard() {
         return marks;
     };
 
-    const handleLogout = async () => {
-        await logout();
-        router.replace('/member-login/login');
-    };
-
     if (loading) return <ActivityIndicator size="large" color="#3b82f6" className="flex-1 justify-center bg-gray-100" />;
 
     return (
@@ -139,14 +134,6 @@ export default function Dashboard() {
                         </Animated.View>
                     );
                 }}
-                ListFooterComponent={() => (
-                    <TouchableOpacity
-                        className="p-5 m-4 rounded-2xl shadow-md bg-red-500 active:opacity-80"
-                        onPress={handleLogout}
-                    >
-                        <Text className="text-white font-bold text-center text-lg">Logout</Text>
-                    </TouchableOpacity>
-                )}
                 ListEmptyComponent={<Text className="text-center mt-6 text-lg text-gray-600">Start your journey – check in today!</Text>}
             />
             <Toast />

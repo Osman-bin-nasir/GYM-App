@@ -3,7 +3,7 @@ import axios from "axios";
 import * as SecureStore from "expo-secure-store";
 
 // Use your actual backend URL - replace with your correct URL
-const API_URL = process.env.EXPO_PUBLIC_API_URL ; // Use your computer's IP
+const API_URL = process.env.EXPO_PUBLIC_API_URL || "http://192.168.0.178:3000/" ; // Use your computer's IP
 
 console.log("API URL configured as:", API_URL);
 
